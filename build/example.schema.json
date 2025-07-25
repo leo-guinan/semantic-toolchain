@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/schemas/example.json",
+  "title": "Example",
+  "description": "Example ontology for testing",
+  "definitions": {
+    "Person": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name of the person"
+        },
+        "age": {
+          "type": "integer",
+          "minimum": 0.0,
+          "maximum": 150.0,
+          "description": "Age of the person"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive",
+            "pending"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "age",
+        "status"
+      ],
+      "description": "A person entity"
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique product identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Product name"
+        },
+        "price": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1000000.0,
+          "description": "Product price"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "electronics",
+            "clothing",
+            "books",
+            "other"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "price",
+        "category"
+      ],
+      "description": "A product entity"
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/definitions/Person"
+    },
+    {
+      "$ref": "#/definitions/Product"
+    }
+  ],
+  "version": "1.0.0"
+}

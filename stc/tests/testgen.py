@@ -2,8 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Dict, Any, List, Optional
-from textwrap import dedent
+from typing import Dict, Any, List
 from stc.config import ensure_dir
 
 def generate_property_tests(schema_path: str, out_path: str) -> None:
@@ -108,76 +107,6 @@ def generate_entity_tests(entity_name: str, entity_schema: Dict[str, Any]) -> Li
         "",
         ])
     
-    # Test field constraints
-    properties = entity_schema.get("properties", {})
-    for field_name, field_schema in properties.items():
-        lines.extend(generate_field_tests(entity_name, field_name, field_schema))
-    
-    return lines
-
-def generate_field_tests(entity_name: str, field_name: str, field_schema: Dict[str, Any]) -> List[str]:
-    """Generate tests for a specific field."""
-    lines = []
-    
-    # Test field type
-    field_type = field_schema.get("type")
-    if field_type:
-        lines.extend([
-        f"    def test_{entity_name.lower()}_{field_name}_type(self):",
-        f'        """Test that {field_name} has correct type."""',
-        f"        # This test would be implemented with specific type checking",
-        f"        # based on the field schema",
-        f"        pass",
-        "",
-        ])
-    
-    # Test enum values
-    enum_values = field_schema.get("enum")
-    if enum_values:
-        lines.extend([
-        f"    @given(st.sampled_from({enum_values}))",
-        f"    def test_{entity_name.lower()}_{field_name}_enum(self, value):",
-        f'        """Test that {field_name} accepts valid enum values."""',
-        f"        data = {{'{field_name}': value}}",
-        f"        # Add other required fields if needed",
-        f"        errors = list(validator.iter_errors(data))",
-        f"        # Note: This is a simplified test",
-        f"        pass",
-        "",
-        ])
-    
-    # Test string length constraints
-    if field_type == "string":
-        min_length = field_schema.get("minLength")
-        max_length = field_schema.get("maxLength")
-        
-        if min_length or max_length:
-            lines.extend([
-        f"    def test_{entity_name.lower()}_{field_name}_length(self):",
-        f'        """Test that {field_name} respects length constraints."""',
-        f"        min_len = {min_length or 0}",
-        f"        max_len = {max_length or 'None'}",
-        f"        # This test would validate string length constraints",
-        f"        pass",
-        "",
-            ])
-    
-    # Test numeric range constraints
-    if field_type in ["integer", "number"]:
-        minimum = field_schema.get("minimum")
-        maximum = field_schema.get("maximum")
-        
-        if minimum is not None or maximum is not None:
-            lines.extend([
-        f"    def test_{entity_name.lower()}_{field_name}_range(self):",
-        f'        """Test that {field_name} respects range constraints."""',
-        f"        min_val = {minimum or 'None'}",
-        f"        max_val = {maximum or 'None'}",
-        f"        # This test would validate numeric range constraints",
-        f"        pass",
-        "",
-            ])
-    
     return lines
 
 def generate_schema_tests(schema: Dict[str, Any]) -> List[str]:
@@ -213,7 +142,7 @@ def generate_constraint_tests(schema: Dict[str, Any]) -> List[str]:
         "class TestConstraints:",
         "",
         "    def test_no_additional_properties(self):",
-        '        """Test that entities don't allow additional properties."""',
+        '        """Test that entities don\'t allow additional properties."""',
         "        for entity_name, entity_schema in SCHEMA['definitions'].items():",
         "            if entity_schema.get('additionalProperties') is False:",
         "                # Test with extra field",
@@ -273,25 +202,4 @@ def generate_fuzz_tests(schema: Dict[str, Any]) -> List[str]:
         "            # Should handle gracefully",
         "            assert isinstance(errors, list)",
         "",
-    ]
-
-def generate_hypothesis_strategies(schema: Dict[str, Any]) -> str:
-    """Generate Hypothesis strategies for schema."""
-    lines = [
-        "# Hypothesis strategies for schema entities",
-        "",
-        "import hypothesis.strategies as st",
-        "from hypothesis.extra.jsonschema import from_schema",
-        "",
-    ]
-    
-    definitions = schema.get("definitions", {})
-    for entity_name in definitions.keys():
-        lines.extend([
-        f"def {entity_name.lower()}_strategy():",
-        f'    """Generate {entity_name} instances."""',
-        f"    return from_schema(SCHEMA['definitions']['{entity_name}'])",
-        "",
-        ])
-    
-    return "\n".join(lines) 
+    ] 

@@ -1,0 +1,81 @@
+# PEG grammar for example JSON validation
+# Generated from ontology
+
+# Basic JSON structure
+start <- object
+object <- '{' (pair (',' pair)*)? '}'
+pair <- string ':' value
+value <- string / number / object / array / boolean / null
+array <- '[' (value (',' value)*)? ']'
+string <- '"' (!'"' .)* '"'
+number <- '-'? [0-9]+ ('.' [0-9]+)?
+boolean <- 'true' / 'false'
+null <- 'null'
+
+# Entity-specific rules
+# Person entity
+person_object <- '{'
+  person_required_fields
+  (',' person_optional_fields)*
+  '}'
+
+person_required_fields <- person_name_pair
+  (',' person_age_pair)*
+  (',' person_status_pair)*
+
+person_optional_fields <- person_email_pair
+
+# name field
+person_name_pair <- '"name"' ':' person_name_value
+person_name_value <- string
+
+# age field
+person_age_pair <- '"age"' ':' person_age_value
+person_age_value <- number_0.0_150.0
+
+# email field
+person_email_pair <- '"email"' ':' person_email_value
+person_email_value <- string
+
+# status field
+person_status_pair <- '"status"' ':' person_status_value
+person_status_value <- 'active' / 'inactive' / 'pending'
+
+# Product entity
+product_object <- '{'
+  product_required_fields
+  '}'
+
+product_required_fields <- product_id_pair
+  (',' product_name_pair)*
+  (',' product_price_pair)*
+  (',' product_category_pair)*
+
+# id field
+product_id_pair <- '"id"' ':' product_id_value
+product_id_value <- string
+
+# name field
+product_name_pair <- '"name"' ':' product_name_value
+product_name_value <- string
+
+# price field
+product_price_pair <- '"price"' ':' product_price_value
+product_price_value <- number_0.0_1000000.0
+
+# category field
+product_category_pair <- '"category"' ':' product_category_value
+product_category_value <- 'electronics' / 'clothing' / 'books' / 'other'
+
+# Constraint-based validation rules
+# Constraint 1: len(name) >= 2
+# TODO: Implement constraint validation for: len(name) >= 2
+# Constraint 2: price > 0
+# TODO: Implement constraint validation for: price > 0
+
+# Length-constrained strings
+# Range-constrained numbers
+number_0.0_150.0 <- number
+# TODO: Add range validation for 0.0 <= number <= 150.0
+number_0.0_1000000.0 <- number
+# TODO: Add range validation for 0.0 <= number <= 1000000.0

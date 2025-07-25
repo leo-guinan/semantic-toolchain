@@ -291,3 +291,38 @@ def validate_bundle(bundle_path: str) -> List[str]:
         errors.append(f"Invalid runtime config: {e}")
     
     return errors 
+
+def deploy_runtime(bundle_path: str, runtime_type: str = "k8s") -> None:
+    """Deploy the runtime bundle to the specified environment."""
+    
+    bundle_path = Path(bundle_path)
+    
+    if not bundle_path.exists():
+        raise FileNotFoundError(f"Bundle not found: {bundle_path}")
+    
+    if runtime_type == "k8s":
+        deploy_to_kubernetes(bundle_path)
+    elif runtime_type == "local":
+        deploy_to_local(bundle_path)
+    elif runtime_type == "ecs":
+        deploy_to_ecs(bundle_path)
+    else:
+        raise ValueError(f"Unsupported runtime type: {runtime_type}")
+
+def deploy_to_kubernetes(bundle_path: Path) -> None:
+    """Deploy bundle to Kubernetes."""
+    # TODO: Implement Kubernetes deployment
+    print(f"Deploying {bundle_path} to Kubernetes...")
+    print("Kubernetes deployment not yet implemented")
+
+def deploy_to_local(bundle_path: Path) -> None:
+    """Deploy bundle locally."""
+    # TODO: Implement local deployment
+    print(f"Deploying {bundle_path} locally...")
+    print("Local deployment not yet implemented")
+
+def deploy_to_ecs(bundle_path: Path) -> None:
+    """Deploy bundle to AWS ECS."""
+    # TODO: Implement ECS deployment
+    print(f"Deploying {bundle_path} to ECS...")
+    print("ECS deployment not yet implemented") 

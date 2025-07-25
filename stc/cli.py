@@ -27,23 +27,31 @@ def init(name: str = typer.Argument(..., help="Domain name (e.g. fairwork)")):
 def compile(
     ontology: str = typer.Argument(..., help="Path to ontology YAML/JSON"),
     out: str = typer.Option("build/", help="Output dir"),
-    emit: list[str] = typer.Option(
-        ["jsonschema", "pydantic", "ts", "grammar"], help="Artifacts to emit"
-    ),
+    jsonschema: bool = typer.Option(True, help="Emit JSON Schema"),
+    pydantic: bool = typer.Option(True, help="Emit Pydantic models"),
+    ts: bool = typer.Option(True, help="Emit TypeScript interfaces"),
+    grammar: bool = typer.Option(True, help="Emit PEG grammar"),
 ):
     """
     Compile ontology into schemas, validators & grammars.
     """
     onto = load_ontology(ontology)
-    if "jsonschema" in emit:
+    emitted = []
+    
+    if jsonschema:
         emit_jsonschema(onto, out)
-    if "pydantic" in emit:
+        emitted.append("jsonschema")
+    if pydantic:
         emit_pydantic_models(onto, out)
-    if "ts" in emit:
+        emitted.append("pydantic")
+    if ts:
         emit_ts_interfaces(onto, out)
-    if "grammar" in emit:
+        emitted.append("ts")
+    if grammar:
         emit_peg_grammar(onto, out)
-    rprint(f"[cyan]Compiled ontology → {emit} into {out}[/cyan]")
+        emitted.append("grammar")
+    
+    rprint(f"[cyan]Compiled ontology → {emitted} into {out}[/cyan]")
 
 # ---------- CURATE ----------
 @app.command()

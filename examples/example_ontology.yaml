@@ -1,0 +1,68 @@
+name: example
+description: Example ontology for testing
+version: "1.0.0"
+
+entities:
+  Person:
+    description: A person entity
+    fields:
+      name:
+        type: string
+        description: Full name of the person
+        required: true
+      age:
+        type: int
+        description: Age of the person
+        range: [0, 150]
+        required: true
+      email:
+        type: string
+        description: Email address
+        required: false
+      status:
+        type: string
+        enum: ["active", "inactive", "pending"]
+        description: Current status
+        required: true
+
+  Product:
+    description: A product entity
+    fields:
+      id:
+        type: string
+        description: Unique product identifier
+        required: true
+      name:
+        type: string
+        description: Product name
+        required: true
+      price:
+        type: float
+        description: Product price
+        range: [0.0, 1000000.0]
+        required: true
+      category:
+        type: string
+        enum: ["electronics", "clothing", "books", "other"]
+        description: Product category
+        required: true
+
+constraints:
+  - expr: "len(name) >= 2"
+    message: "Name must be at least 2 characters long"
+  - expr: "price > 0"
+    message: "Price must be positive"
+
+examples:
+  - input:
+      type: "Person"
+      name: "John Doe"
+      age: 30
+      email: "john@example.com"
+      status: "active"
+    output:
+      type: "Person"
+      name: "John Doe"
+      age: 30
+      email: "john@example.com"
+      status: "active"
