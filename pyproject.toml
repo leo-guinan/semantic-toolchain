@@ -1,0 +1,37 @@
+[project]
+name = "semantic-toolchain"
+version = "0.0.1"
+description = "CLI to compile ontologies into schemas, grammars, tests, and MVMs"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name="Your Name", email="you@example.com" }]
+
+dependencies = [
+  "typer[all]>=0.12.3",
+  "pydantic>=2.5.0",
+  "ruamel.yaml>=0.18.5",
+  "jsonschema>=4.21.1",
+  "hypothesis>=6.100.0",
+  "lark-parser>=0.12.0",
+  "transformers>=4.42.0",
+  "accelerate>=0.30.0",
+  "peft>=0.11.1",
+  "datasets>=2.19.0",
+  "rich>=13.7.0",
+  "pyyaml>=6.0.1"
+]
+
+[project.scripts]
+stc = "stc.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.0.0",
+] 
